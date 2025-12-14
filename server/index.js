@@ -8,6 +8,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const authRoutes = require('./routes/auth');
+
 // Middleware
 app.use(cors({
     origin: 'http://localhost:5173', // Vite default port
@@ -17,6 +19,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
+app.use('/api/auth', authRoutes);
+
 app.get('/', (req, res) => {
     res.send('Private Notes App API is running');
 });

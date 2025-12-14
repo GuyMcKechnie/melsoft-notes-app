@@ -8,7 +8,6 @@ router.use(authenticateUser);
 // Get all notes
 router.get('/', async (req, res) => {
     try {
-        // Use req.supabase instead of global supabase
         const { data, error } = await req.supabase
             .from('notes')
             .select('*')
@@ -27,7 +26,6 @@ router.post('/', async (req, res) => {
     const { title, content } = req.body;
 
     try {
-        // Use req.supabase
         const { data, error } = await req.supabase
             .from('notes')
             .insert([{ title, content, user_id: req.user.id }])
@@ -47,7 +45,6 @@ router.put('/:id', async (req, res) => {
     const { title, content } = req.body;
 
     try {
-        // Use req.supabase
         const { data, error } = await req.supabase
             .from('notes')
             .update({ title, content })
@@ -71,7 +68,6 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
-        // Use req.supabase
         const { error } = await req.supabase
             .from('notes')
             .delete()

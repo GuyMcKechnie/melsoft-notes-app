@@ -17,7 +17,7 @@ const Dashboard = () => {
 
     const fetchNotes = useCallback(async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/notes", {
+            const response = await fetch("/api/notes", {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -45,7 +45,7 @@ const Dashboard = () => {
         if (!title || !content) return;
 
         try {
-            const response = await fetch("http://localhost:5000/api/notes", {
+            const response = await fetch("/api/notes", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -68,17 +68,14 @@ const Dashboard = () => {
         if (!editingNote || !title || !content) return;
 
         try {
-            const response = await fetch(
-                `http://localhost:5000/api/notes/${editingNote.id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({ title, content }),
-                }
-            );
+            const response = await fetch(`/api/notes/${editingNote.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({ title, content }),
+            });
 
             if (response.ok) {
                 setEditingNote(null);
@@ -93,13 +90,10 @@ const Dashboard = () => {
 
     const handleDeleteNote = async (id: string) => {
         try {
-            const response = await fetch(
-                `http://localhost:5000/api/notes/${id}`,
-                {
-                    method: "DELETE",
-                    credentials: "include",
-                }
-            );
+            const response = await fetch(`/api/notes/${id}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
 
             if (response.ok) {
                 fetchNotes();
@@ -111,7 +105,7 @@ const Dashboard = () => {
 
     const handleLogout = async () => {
         try {
-            await fetch("http://localhost:5000/api/auth/logout", {
+            await fetch("/api/auth/logout", {
                 method: "POST",
                 credentials: "include",
             });

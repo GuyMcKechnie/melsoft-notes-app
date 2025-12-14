@@ -1,73 +1,101 @@
-# React + TypeScript + Vite
+# Private Notes App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A secure, full-stack personal notes application built with React, Node.js, Express, and Supabase. This project demonstrates a complete authentication flow using JWTs, HTTP-only cookies, and Row Level Security (RLS) to ensure data privacy.
 
-Currently, two official plugins are available:
+## Project Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Goal:** Build a simple, secure Personal Notes App where only the authenticated user can see and manage their notes.
 
-## React Compiler
+**Key Features:**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-   **User Authentication:** Secure Signup, Login, and Logout functionality.
+-   **Protected Dashboard:** Access is restricted to logged-in users only.
+-   **CRUD Operations:** Create, Read, Update, and Delete personal notes.
+-   **Data Privacy:** Implements Row Level Security (RLS) in Supabase so users can strictly access only their own data.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+-   **Frontend:** React.js (Vite), Tailwind CSS
+-   **Backend:** Node.js, Express.js
+-   **Database & Auth:** Supabase (PostgreSQL)
+-   **Security:** JWT Tokens, HTTP-only Cookies, RLS Policies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Project Structure
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+notes-app/
+├── server/                 # Backend (Node.js + Express)
+│   ├── middleware/         # Auth middleware (JWT verification)
+│   ├── routes/             # API routes (Auth, Notes)
+│   ├── db_schema.sql       # Database schema & RLS policies
+│   ├── index.js            # Server entry point
+│   └── supabaseClient.js   # Supabase client configuration
+├── src/                    # Frontend (React)
+│   ├── pages/              # Page components (Login, Register, Dashboard)
+│   ├── App.tsx             # Main app component & Routing
+│   └── main.tsx            # React entry point
+├── PRD.md                  # Product Requirements Document
+└── ...config files
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Setup Instructions
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+-   Node.js installed
+-   A Supabase account
+
+### 1. Database Setup
+
+1.  Create a new project in Supabase.
+2.  Go to the SQL Editor in your Supabase dashboard.
+3.  Copy the contents of `server/db_schema.sql` and run it to create the `notes` table and enable RLS policies.
+
+### 2. Backend Setup
+
+1.  Navigate to the server directory:
+    ```bash
+    cd server
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Create a `.env` file in the `server` directory and add your Supabase credentials:
+    ```env
+    PORT=5000
+    SUPABASE_URL=your_supabase_url
+    SUPABASE_KEY=your_supabase_anon_key
+    ```
+4.  Start the server:
+    ```bash
+    npm run dev
+    ```
+
+### 3. Frontend Setup
+
+1.  Open a new terminal and navigate to the root directory.
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the React development server:
+    ```bash
+    npm run dev
+    ```
+
+## API Endpoints
+
+| Method | Endpoint           | Description                | Access    |
+| :----- | :----------------- | :------------------------- | :-------- |
+| POST   | `/api/auth/signup` | Register a new user        | Public    |
+| POST   | `/api/auth/login`  | Login user & set cookie    | Public    |
+| POST   | `/api/auth/logout` | Logout user & clear cookie | Protected |
+| GET    | `/api/notes`       | Fetch user's notes         | Protected |
+| POST   | `/api/notes`       | Create a new note          | Protected |
+| PUT    | `/api/notes/:id`   | Update a note              | Protected |
+| DELETE | `/api/notes/:id`   | Delete a note              | Protected |
+
+---
+
+_This README was proofread/updated by AI for transparency._

@@ -9,6 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const authRoutes = require('./routes/auth');
+const notesRoutes = require('./routes/notes');
 
 // Middleware
 app.use(cors({
@@ -20,6 +21,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/notes', notesRoutes);
 
 app.get('/', (req, res) => {
     res.send('Private Notes App API is running');

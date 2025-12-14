@@ -1,13 +1,47 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    const handleLogin = async () => {
+        try {
+            const response = await fetch(
+                "http://localhost:5000/api/auth/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email, password }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+                navigate("/dashboard");
+            } else {
+                setError(data.error || "Login failed");
+            }
+        } catch (err) {
+            setError("An error occurred. Please try again.");
+            console.error(err);
+        }
+    };
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-100">
             <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
                 <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
                     Login
                 </h2>
+                {error && (
+                    <p className="mb-4 text-center text-red-500">{error}</p>
+                )}
                 <form>
                     <div className="mb-4">
                         <label
@@ -21,6 +55,8 @@ const Login = () => {
                             id="email"
                             type="email"
                             placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <div className="mb-6">
@@ -35,12 +71,15 @@ const Login = () => {
                             id="password"
                             type="password"
                             placeholder="******************"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
                     <div className="flex items-center justify-between">
                         <button
                             className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                             type="button"
+                            onClick={handleLogin}
                         >
                             Sign In
                         </button>
